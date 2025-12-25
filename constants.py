@@ -43,8 +43,12 @@ TRAY_ICON_SIZE = 64
 # True: 报时前先短时显示 meter；False: 不先触发 meter
 TRIGGER_METER_BEFORE_ANNOUNCE = True
 
-# α世界线
+# α 世界线
 ATTRACTOR_FIELD_α = (
+    "0.934587",
+    "0.815524",
+    "0.751354",
+    "0.615483",
     "0.571082",
     "0.571024",
     "0.571015",
@@ -63,8 +67,10 @@ ATTRACTOR_FIELD_α = (
     "0.328403",
     "0.000000",
 )
-# β世界线
+# β 世界线
 ATTRACTOR_FIELD_β = (
+    "1.818520",
+    "1.467093",
     "1.382733",
     "1.143688",
     "1.130426",
@@ -87,14 +93,21 @@ ATTRACTOR_FIELD_β = (
     "1.055821",
     "1.053649",
 )
-# Steins;Gate 世界线
-ATTRACTOR_FIELD_STEINS_GATE = ("1.048596",)
 # R 世界线
 ATTRACTOR_FIELD_R = ("1.048595", "1.048597")
-# X 世界线
-ATTRACTOR_FIELD_X = ("1.048599", "1.049326", "1.048728")
+# χ 世界线 "Steins;Gate 世界线 1.048596"
+ATTRACTOR_FIELD_χ = (
+    "1.048264",
+    "1.048596",
+    "1.048599",
+    "1.048728",
+    "1.049326",
+)
 # γ 世界线
-ATTRACTOR_FIELD_γ = ("2.615074",)
+ATTRACTOR_FIELD_γ = (
+    "2.224529",
+    "2.615074",
+)
 # δ 世界线
 ATTRACTOR_FIELD_δ = (
     "3.019430",
@@ -123,9 +136,8 @@ ATTRACTOR_FIELD_Ω = ("-0.275349", "-0.195284")
 ATTRACTOR_FIELD = (
     ATTRACTOR_FIELD_α,
     ATTRACTOR_FIELD_β,
-    ATTRACTOR_FIELD_STEINS_GATE,
     ATTRACTOR_FIELD_R,
-    ATTRACTOR_FIELD_X,
+    ATTRACTOR_FIELD_χ,
     ATTRACTOR_FIELD_γ,
     ATTRACTOR_FIELD_δ,
     ATTRACTOR_FIELD_ε,
