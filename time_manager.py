@@ -19,7 +19,7 @@ class TimeManager:
         minute = current_time.tm_min
         second = current_time.tm_sec
 
-        # # 检查是否在整点的显示窗口
+        # 检查是否在整点的显示窗口
         if minute == 59 and second >= 50:
             return True
         if minute == 0 and second <= 10:

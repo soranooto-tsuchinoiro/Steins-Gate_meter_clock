@@ -4,25 +4,26 @@
 
 import io
 import time
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtGui import QPixmap, QImage
-from PyQt5.QtWidgets import QApplication, QLabel, QWidget
+
 from PIL import Image
+from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtGui import QImage, QPixmap
+from PyQt5.QtWidgets import QApplication, QLabel, QWidget
 
 from constants import (
-    TYPE_CLOCK,
-    TYPE_METER,
+    LABEL_HEIGHT_PCT,
+    LABEL_WIDTH_PCT,
     MAIN_TIMER_INTERVAL_MS,
     METER_FLASH_DURATION_MS,
-    LABEL_WIDTH_PCT,
-    LABEL_HEIGHT_PCT,
     TOP_OFFSET_PCT,
     TRIGGER_METER_BEFORE_ANNOUNCE,
+    TYPE_CLOCK,
+    TYPE_METER,
 )
-from ui_components import FramelessWindow
 from threads import ImageThread
-from tray_icon import TrayIconManager
 from time_manager import TimeManager
+from tray_icon import TrayIconManager
+from ui_components import FramelessWindow
 
 
 class Divergence(FramelessWindow):
@@ -40,9 +41,7 @@ class Divergence(FramelessWindow):
         self.pixmap = None
 
         # 自动隐藏相关
-        self.auto_hide_enabled = True
         self.last_second = -1
-        self.was_visible = False
         self.manual_show_mode = False
 
         # 定时器
@@ -78,10 +77,10 @@ class Divergence(FramelessWindow):
         label_w = int(screen_w * LABEL_WIDTH_PCT)
         label_h = int(screen_h * LABEL_HEIGHT_PCT)
 
-        # 将窗口大小设置为标签大小并定位到右上角，距离顶部为 TOP_OFFSET_PCT
+        # 将窗口大小设置为标签大小并定位到屏幕中央，距离顶部5%
         self.resize(label_w, label_h)
         self.label.resize(label_w, label_h)
-        x = screen_geom.x() + screen_w - label_w
+        x = screen_geom.x() + (screen_w - label_w) // 2
         y = screen_geom.y() + int(screen_h * TOP_OFFSET_PCT)
         self.move(x, y)
 
@@ -113,29 +112,12 @@ class Divergence(FramelessWindow):
     def manual_show_window(self):
         """手动显示窗口"""
         self.manual_show_mode = True
-        self.auto_hide_enabled = False
-        if self.tray_manager and self.tray_manager.auto_hide_action:
-            self.tray_manager.auto_hide_action.setChecked(False)
         self.show()
-        self.was_visible = True
 
     def manual_hide_window(self):
         """手动隐藏窗口"""
         self.manual_show_mode = False
         self.hide()
-        self.was_visible = False
-
-    def toggle_auto_hide(self):
-        """切换自动隐藏模式"""
-        self.auto_hide_enabled = self.tray_manager.auto_hide_action.isChecked()
-        if self.auto_hide_enabled:
-            self.manual_show_mode = False
-            if self.time_manager.is_in_display_window():
-                self.show()
-                self.was_visible = True
-            else:
-                self.hide()
-                self.was_visible = False
 
     # ========================================================================
     # 时间检查与自动显示/隐藏
@@ -147,7 +129,7 @@ class Divergence(FramelessWindow):
 
     def _check_time_and_toggle(self):
         """定时器回调函数: 检查时间并控制窗口显示/隐藏"""
-        if self.manual_show_mode or not self.auto_hide_enabled:
+        if self.manual_show_mode:
             return
 
         current_time = time.localtime()
@@ -168,10 +150,8 @@ class Divergence(FramelessWindow):
 
         if should_show and not self.isVisible():
             self.show()
-            self.was_visible = True
-        elif not should_show and self.isVisible() and self.was_visible:
+        elif not should_show and self.isVisible():
             self.hide()
-            self.was_visible = False
             if self.type_ == TYPE_METER:
                 self.type_ = TYPE_CLOCK
                 self.worker.set_type(self.type_)
@@ -187,7 +167,6 @@ class Divergence(FramelessWindow):
         self.meter_timer.start(METER_FLASH_DURATION_MS)
         if not self.isVisible():
             self.show()
-            self.was_visible = True
 
     def _stop_meter_flash(self):
         """结束短时随机闪动, 恢复时钟模式"""
@@ -252,7 +231,6 @@ class Divergence(FramelessWindow):
     def keyPressEvent(self, event):
         """按键时隐藏窗口"""
         self.hide()
-        self.was_visible = False
         if self.manual_show_mode:
             self.manual_show_mode = False
 

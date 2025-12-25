@@ -2,21 +2,16 @@
 常量定义模块
 """
 
-# 显示模式
+# 显示模式，clock 时钟模式，meter 世界线
 TYPE_CLOCK = "clock"
 TYPE_METER = "meter"
-
-# 界面默认值
-# 初始化显示用的 QLabel 默认尺寸（宽, 高）
-LABEL_DEFAULT_WIDTH = 984
-LABEL_DEFAULT_HEIGHT = 515
 
 # UI 大小/位置相关（百分比，相对于可用屏幕尺寸）
 # `LABEL_WIDTH_PCT` / `LABEL_HEIGHT_PCT`：显示区（QLabel）相对于屏幕宽/高的比例
 # `TOP_OFFSET_PCT`：窗口顶部距离屏幕顶部的比例（例如 0.1 表示 10%）
 LABEL_WIDTH_PCT = 0.30
 LABEL_HEIGHT_PCT = 0.20
-TOP_OFFSET_PCT = 0.10
+TOP_OFFSET_PCT = 0.05
 
 # 是否在窗口显示时不抢占焦点（True 将尝试不激活窗口）
 SHOW_WITHOUT_ACTIVATING = True

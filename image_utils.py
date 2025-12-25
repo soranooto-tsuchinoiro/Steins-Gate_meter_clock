@@ -2,18 +2,20 @@
 图片处理相关工具类
 """
 
+import datetime
 import os
 import random
-import datetime
 import time
-from typing import Iterable, Callable
+from typing import Callable, Iterable
+
 from PIL import Image, ImageOps
+
 from constants import (
-    IMAGE_DIR_NAME,
-    IMAGE_DIGITS,
-    RANDOM_WAIT_SHORT_MS,
-    RANDOM_WAIT_LONG_MS,
     CLOCK_FRAME_INTERVAL_MS,
+    IMAGE_DIGITS,
+    IMAGE_DIR_NAME,
+    RANDOM_WAIT_LONG_MS,
+    RANDOM_WAIT_SHORT_MS,
 )
 
 # 模块级开关：用于控制 `_generate_clock` 返回不同格式的时间字符串（默认 False）
