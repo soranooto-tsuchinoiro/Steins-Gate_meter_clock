@@ -185,6 +185,8 @@ SHOW_WITHOUT_ACTIVATING = True        # 显示时不抢占焦点
 
 本项目灵感来源于《命运石之门》(Steins;Gate)及其世界线变动率探测器的概念。
 
-灵感与参考项目：[mikusa](https://www.himiku.com/tools/steinsgate/) [obgnail/divergence_meter_clock: 命运石之门同款世界线变动率探测仪](https://github.com/obgnail/divergence_meter_clock) [Asterecho/Nixie: 西梅时钟+辉光管时钟](https://github.com/Asterecho/Nixie)
+灵感与参考项目：
+[mikusa](https://www.himiku.com/tools/steinsgate/) 
+[obgnail/divergence_meter_clock: 命运石之门同款世界线变动率探测仪](https://github.com/obgnail/divergence_meter_clock) [Asterecho/Nixie: 西梅时钟+辉光管时钟](https://github.com/Asterecho/Nixie)
 
 El Psy Kongroo.
