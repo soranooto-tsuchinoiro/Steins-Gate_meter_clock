@@ -1,26 +1,23 @@
 """
 常量定义模块
+
+定义应用程序使用的所有常量，包括显示模式、世界线数据、UI参数等
 """
 
-# 显示模式，clock 时钟模式，meter 世界线
+# ========================================================================
+# 显示模式常量
+# ========================================================================
+
+# 时钟模式：显示当前时间
 TYPE_CLOCK = "clock"
+
+# 世界线模式：显示世界线变动率
 TYPE_METER = "meter"
 
 
-# 随机表盘（meter）闪动持续时间（毫秒）
-def get_meter_flash_duration_ms(config):
-    return config.get_flash_duration_ms()
-
-
-# ImageGenerator 中随机等待的短/长时长（毫秒），用于 meter 模式的节奏控制
-def get_random_wait_short_ms(config):
-    return config.get_random_wait_short_ms()
-
-
-# 显示时间区间（分钟列表）
-def get_display_minutes(config):
-    return config.get_display_minutes()
-
+# ========================================================================
+# UI显示参数
+# ========================================================================
 
 # 是否在窗口显示时不抢占焦点（True 将尝试不激活窗口）
 SHOW_WITHOUT_ACTIVATING = True
@@ -31,21 +28,43 @@ MAIN_TIMER_INTERVAL_MS = 100
 # 时钟帧更新间隔（毫秒），控制时钟图片生成频率
 CLOCK_FRAME_INTERVAL_MS = 500
 
+
+# ========================================================================
+# 资源文件配置
+# ========================================================================
+
 # 存放数字图片的目录名（相对于代码文件夹）
 IMAGE_DIR_NAME = "img"
+
 # 期望在资源目录中存在的数字/小数点文件名键集合
 IMAGE_DIGITS = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "null")
 
+
+# ========================================================================
+# 托盘图标配置
+# ========================================================================
+
 # 托盘图标的提示文本（tooltip）
 TRAY_TOOLTIP = "Divergence Meter Clock"
+
 # 托盘图标的尺寸（像素，正方形）
 TRAY_ICON_SIZE = 64
+
+
+# ========================================================================
+# 功能开关
+# ========================================================================
 
 # 报时前是否先触发 meter（世界线变动）
 # True: 报时前先短时显示 meter；False: 不先触发 meter
 TRIGGER_METER_BEFORE_ANNOUNCE = True
 
-# α 世界线
+
+# ========================================================================
+# 世界线数据 - 吸引力场域
+# ========================================================================
+
+# α 世界线（alpha attractor field）
 ATTRACTOR_FIELD_α = (
     "0.934587",
     "0.815524",
@@ -69,7 +88,8 @@ ATTRACTOR_FIELD_α = (
     "0.328403",
     "0.000000",
 )
-# β 世界线
+
+# β 世界线（beta attractor field）
 ATTRACTOR_FIELD_β = (
     "1.818520",
     "1.467093",
@@ -95,9 +115,11 @@ ATTRACTOR_FIELD_β = (
     "1.055821",
     "1.053649",
 )
+
 # R 世界线
 ATTRACTOR_FIELD_R = ("1.048595", "1.048597")
-# χ 世界线 "Steins;Gate 世界线 1.048596"
+
+# χ 世界线（Steins;Gate 世界线 1.048596）
 ATTRACTOR_FIELD_χ = (
     "1.048264",
     "1.048596",
@@ -105,12 +127,14 @@ ATTRACTOR_FIELD_χ = (
     "1.048728",
     "1.049326",
 )
-# γ 世界线
+
+# γ 世界线（gamma attractor field）
 ATTRACTOR_FIELD_γ = (
     "2.224529",
     "2.615074",
 )
-# δ 世界线
+
+# δ 世界线（delta attractor field）
 ATTRACTOR_FIELD_δ = (
     "3.019430",
     "3.030493",
@@ -122,7 +146,8 @@ ATTRACTOR_FIELD_δ = (
     "3.600104",
     "3.667293",
 )
-# ε 世界线
+
+# ε 世界线（epsilon attractor field）
 ATTRACTOR_FIELD_ε = (
     "4.456441",
     "4.493624",
@@ -132,9 +157,11 @@ ATTRACTOR_FIELD_ε = (
     "4.530806",
     "4.389117",
 )
-# Ω 世界线（不使用）
+
+# Ω 世界线（omega attractor field，未使用）
 ATTRACTOR_FIELD_Ω = ("-0.275349", "-0.195284")
-# 世界线集合
+
+# 所有世界线集合（用于随机选择）
 ATTRACTOR_FIELD = (
     ATTRACTOR_FIELD_α,
     ATTRACTOR_FIELD_β,
@@ -144,3 +171,45 @@ ATTRACTOR_FIELD = (
     ATTRACTOR_FIELD_δ,
     ATTRACTOR_FIELD_ε,
 )
+
+
+# ========================================================================
+# 配置相关辅助函数
+# ========================================================================
+
+def get_meter_flash_duration_ms(config):
+    """获取世界线闪动持续时间
+    
+    Args:
+        config (ConfigManager): 配置管理器实例
+        
+    Returns:
+        int: 闪动持续时间（毫秒）
+    """
+    return config.get_flash_duration_ms()
+
+
+def get_random_wait_short_ms(config):
+    """获取随机等待短时长
+    
+    用于 meter 模式的节奏控制
+    
+    Args:
+        config (ConfigManager): 配置管理器实例
+        
+    Returns:
+        int: 短时等待时长（毫秒）
+    """
+    return config.get_random_wait_short_ms()
+
+
+def get_display_minutes(config):
+    """获取显示时间区间
+    
+    Args:
+        config (ConfigManager): 配置管理器实例
+        
+    Returns:
+        list: 分钟列表，如[0, 30]表示整点和半点
+    """
+    return config.get_display_minutes()
