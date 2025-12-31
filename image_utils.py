@@ -8,7 +8,6 @@ import datetime
 import os
 import random
 import time
-from typing import Callable, Iterable
 
 from PIL import Image, ImageOps
 
@@ -25,17 +24,17 @@ NULL_FLAG = False
 
 class ImageOptionMixin:
     """图片操作混入类
-    
+
     提供图片拼接、边框等基础操作方法
     """
 
     @staticmethod
     def concat_h(img_list):
         """水平拼接图片列表
-        
+
         Args:
             img_list (list): PIL.Image对象列表
-            
+
         Returns:
             PIL.Image: 拼接后的图片
         """
@@ -53,12 +52,12 @@ class ImageOptionMixin:
     @staticmethod
     def add_border(img, w, h):
         """为图片添加边框
-        
+
         Args:
             img (PIL.Image): 原始图片
             w (int): 边框宽度
             h (int): 边框高度
-            
+
         Returns:
             PIL.Image: 添加边框后的图片
         """
@@ -67,13 +66,13 @@ class ImageOptionMixin:
 
 class ImageGenerator(ImageOptionMixin):
     """图片生成器
-    
+
     负责生成时钟和世界线显示所需的图片序列
     """
 
     def __init__(self, config=None, duration=None):
         """初始化图片生成器
-        
+
         Args:
             config (ConfigManager, optional): 配置管理器
             duration (int, optional): 显示持续时间（毫秒）
@@ -89,7 +88,7 @@ class ImageGenerator(ImageOptionMixin):
     @staticmethod
     def _get_img_map():
         """加载数字与小数点图片资源
-        
+
         Returns:
             dict: 图片映射字典 {字符: PIL.Image对象}
         """
@@ -105,12 +104,12 @@ class ImageGenerator(ImageOptionMixin):
 
     def _generate_clock(self, next_wait_ms=None):
         """生成当前时间字符串
-        
+
         交替使用"."和"null"作为时间分隔符，产生动态效果
-        
+
         Args:
             next_wait_ms (int, optional): 下次等待时间（未使用）
-            
+
         Returns:
             list: 时间字符列表，如['0','9','.','3','0','.','4','5']
         """
@@ -121,7 +120,7 @@ class ImageGenerator(ImageOptionMixin):
             time_list.insert(5, "null")
         else:
             time_list = list(datetime.datetime.now().strftime("%H.%M.%S"))
-        
+
         # 切换分隔符标志
         NULL_FLAG = not NULL_FLAG
         return time_list
@@ -132,13 +131,13 @@ class ImageGenerator(ImageOptionMixin):
 
     def _generate_meter(self, next_wait_ms=None):
         """生成世界线变动率字符串
-        
+
         如果next_wait_ms表示长时显示，则从预定义的世界线数据中选择
         否则快速随机生成数字
-        
+
         Args:
             next_wait_ms (int, optional): 下次等待时间
-            
+
         Returns:
             list: 世界线数字字符列表，如['1','.','0','4','8','5','9','6']
         """
@@ -162,9 +161,9 @@ class ImageGenerator(ImageOptionMixin):
 
     def _random_wait_time(self):
         """返回随机等待时间生成器
-        
+
         控制世界线闪动的节奏：前19次快速闪动，第20次长时间显示
-        
+
         Returns:
             Callable: 等待时间生成函数
         """
@@ -194,10 +193,10 @@ class ImageGenerator(ImageOptionMixin):
 
     def generate_image(self, num_list):
         """将字符列表拼接为图片
-        
+
         Args:
             num_list (list): 字符列表
-            
+
         Returns:
             PIL.Image: 拼接后的图片
         """
@@ -207,11 +206,11 @@ class ImageGenerator(ImageOptionMixin):
 
     def generate(self, gen_img_list, gen_wait_time):
         """生成图片流的通用方法
-        
+
         Args:
             gen_img_list (Callable): 字符列表生成函数
             gen_wait_time (Callable): 等待时间生成函数
-            
+
         Yields:
             PIL.Image: 生成的图片
         """
@@ -236,10 +235,10 @@ class ImageGenerator(ImageOptionMixin):
 
     def meter(self, wait_time=None):
         """生成世界线变动率图片流
-        
+
         Args:
             wait_time (Callable, optional): 自定义等待时间函数
-            
+
         Yields:
             PIL.Image: 世界线图片序列
         """
@@ -248,7 +247,7 @@ class ImageGenerator(ImageOptionMixin):
 
     def clock(self):
         """生成时钟图片流
-        
+
         Yields:
             PIL.Image: 时钟图片序列
         """
