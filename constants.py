@@ -6,21 +6,27 @@
 TYPE_CLOCK = "clock"
 TYPE_METER = "meter"
 
-# UI 大小/位置相关（百分比，相对于可用屏幕尺寸）
-# `LABEL_WIDTH_PCT` / `LABEL_HEIGHT_PCT`：显示区（QLabel）相对于屏幕宽/高的比例
-# `TOP_OFFSET_PCT`：窗口顶部距离屏幕顶部的比例（例如 0.1 表示 10%）
-LABEL_WIDTH_PCT = 0.30
-LABEL_HEIGHT_PCT = 0.20
-TOP_OFFSET_PCT = 0.05
+
+# 随机表盘（meter）闪动持续时间（毫秒）
+def get_meter_flash_duration_ms(config):
+    return config.get_flash_duration_ms()
+
+
+# ImageGenerator 中随机等待的短/长时长（毫秒），用于 meter 模式的节奏控制
+def get_random_wait_short_ms(config):
+    return config.get_random_wait_short_ms()
+
+
+# 显示时间区间（分钟列表）
+def get_display_minutes(config):
+    return config.get_display_minutes()
+
 
 # 是否在窗口显示时不抢占焦点（True 将尝试不激活窗口）
 SHOW_WITHOUT_ACTIVATING = True
 
 # 主定时器轮询时间（毫秒），用于检测时间和显示/隐藏逻辑
 MAIN_TIMER_INTERVAL_MS = 100
-
-# 随机表盘（meter）闪动持续时间（毫秒）
-METER_FLASH_DURATION_MS = 3000
 
 # 时钟帧更新间隔（毫秒），控制时钟图片生成频率
 CLOCK_FRAME_INTERVAL_MS = 500
@@ -29,10 +35,6 @@ CLOCK_FRAME_INTERVAL_MS = 500
 IMAGE_DIR_NAME = "img"
 # 期望在资源目录中存在的数字/小数点文件名键集合
 IMAGE_DIGITS = ("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "null")
-
-# ImageGenerator 中随机等待的短/长时长（毫秒），用于 meter 模式的节奏控制
-RANDOM_WAIT_SHORT_MS = 60
-RANDOM_WAIT_LONG_MS = 2000
 
 # 托盘图标的提示文本（tooltip）
 TRAY_TOOLTIP = "Divergence Meter Clock"

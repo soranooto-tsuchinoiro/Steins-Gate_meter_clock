@@ -10,10 +10,11 @@ from PyQt5.QtGui import QIcon, QImage, QPixmap
 from PyQt5.QtWidgets import QAction, QMenu, QSystemTrayIcon
 
 from constants import TRAY_ICON_SIZE, TRAY_TOOLTIP
+from settings_window import SettingsDialog
 
 
 class TrayIconManager:
-    """系统托盘图标管理器"""
+    # 系统托盘图标管理器
 
     def __init__(self, parent):
         self.parent = parent
@@ -23,8 +24,8 @@ class TrayIconManager:
         self.auto_hide_action = None
         self.display_mode = "timed"  # 默认报时模式
 
+    # 创建系统托盘图标
     def create_tray_icon(self):
-        """创建系统托盘图标"""
         if not QSystemTrayIcon.isSystemTrayAvailable():
             return
 
@@ -46,8 +47,8 @@ class TrayIconManager:
         self.tray_icon.setContextMenu(tray_menu)
         self.tray_icon.show()
 
+    # 创建托盘菜单
     def _create_menu(self):
-        """创建托盘菜单"""
         tray_menu = QMenu()
 
         # 显示模式切换（常显模式 / 报时模式）
@@ -74,6 +75,13 @@ class TrayIconManager:
 
         tray_menu.addSeparator()
 
+        # 设置参数选项
+        settings_action = QAction("设置参数", self.parent)
+        settings_action.triggered.connect(self._open_settings)
+        tray_menu.addAction(settings_action)
+
+        tray_menu.addSeparator()
+
         # 退出菜单项
         quit_action = QAction("退出", self.parent)
         quit_action.triggered.connect(self.parent.quit_application)
@@ -81,8 +89,8 @@ class TrayIconManager:
 
         return tray_menu
 
+    # 切换显示模式：常显模式 <-> 报时模式
     def _toggle_display_mode(self):
-        """切换显示模式：常显模式 <-> 报时模式"""
         if self.display_mode == "timed":
             # 切换到常显模式
             self.display_mode = "always"
@@ -94,8 +102,13 @@ class TrayIconManager:
             self.mode_action.setText("切换常显模式")
             self.parent.manual_hide_window()  # 隐藏窗口
 
+    # 打开设置对话框
+    def _open_settings(self):
+        dialog = SettingsDialog(self.parent.config, self.parent)
+        dialog.exec_()
+
+    # 创建托盘图标图像
     def _create_icon_image(self):
-        """创建托盘图标图像"""
         width = TRAY_ICON_SIZE
         height = TRAY_ICON_SIZE
         image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
@@ -124,7 +137,7 @@ class TrayIconManager:
         pixmap = QPixmap.fromImage(qt_image)
         return QIcon(pixmap)
 
+    # 隐藏托盘图标
     def hide(self):
-        """隐藏托盘图标"""
         if self.tray_icon:
             self.tray_icon.hide()
