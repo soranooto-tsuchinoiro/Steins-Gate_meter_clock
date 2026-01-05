@@ -58,6 +58,8 @@ class Divergence(FramelessWindow):
         self.last_second = -1
         self.manual_show_mode = False
         self.trigger_meter_before_announce = TRIGGER_METER_BEFORE_ANNOUNCE
+        #世界线变动中
+        self._is_meter_active = False
         
         # 定时器
         self.timer = None
@@ -185,23 +187,32 @@ class Divergence(FramelessWindow):
     def trigger_random_meter_once(self):
         """单次触发世界线变动模式
         
-        显示指定时长的世界线变动动画，然后自动切换回时钟模式
+        显示指定时长的世界线变动动画，然后自动切换回时钟模式。
+        若当前正处于闪动中，则忽略本次触发（防重入）。
         """
+        if self._is_meter_active:
+            return  # 已在闪动中，拒绝重复触发
+
         duration = get_meter_flash_duration_ms(self.config)
         self.worker.set_duration(duration)
         self.type_ = TYPE_METER
         self.worker.set_type(self.type_)
         self.meter_timer.start(duration)
         
+        # 设置闪动激活标志
+        self._is_meter_active = True
+
         # 如果窗口未显示则显示
         if not self.isVisible():
             self.show()
+
 
     def _stop_meter_flash(self):
         """停止世界线闪动，恢复时钟模式"""
         if self.type_ == TYPE_METER:
             self.type_ = TYPE_CLOCK
             self.worker.set_type(self.type_)
+            self._is_meter_active = False  # 清除标志，允许下次触发
 
     # ========================================================================
     # 公共方法 - 图片显示
@@ -277,18 +288,6 @@ class Divergence(FramelessWindow):
     # 事件处理 - 键盘和鼠标
     # ========================================================================
 
-    def keyPressEvent(self, event):
-        """键盘按键事件
-        
-        按任意键隐藏窗口
-        
-        Args:
-            event (QKeyEvent): 键盘事件对象
-        """
-        self.hide()
-        if self.manual_show_mode:
-            self.manual_show_mode = False
-
     def mousePressEvent(self, event):
         """鼠标按下事件
         
@@ -304,15 +303,19 @@ class Divergence(FramelessWindow):
     def mouseDoubleClickEvent(self, event):
         """鼠标双击事件
         
-        双击切换最大化/正常大小
+        双击左键切换最大化/正常大小
         
         Args:
             event (QMouseEvent): 鼠标事件对象
         """
-        if self.isMaximized():
-            self.showNormal()
+        if event.button() == Qt.LeftButton:
+            if self.isMaximized():
+                self.showNormal()
+            else:
+                self.showMaximized()
         else:
-            self.showMaximized()
+            # 非左键双击，可选：传递给父类处理（如保留右键菜单等默认行为）
+            super().mouseDoubleClickEvent(event)
 
     # ========================================================================
     # 事件处理 - 窗口状态变化
