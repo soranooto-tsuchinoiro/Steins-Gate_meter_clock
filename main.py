@@ -14,9 +14,13 @@ from main_window import Divergence
 
 def main():
     """启动应用程序
-    
+
     初始化Qt应用，创建主窗口，并根据当前时间决定初始显示状态
     """
+    # 检查并修正开机自启注册表路径（如果路径已变更）
+    from autostart import fix_path_if_needed
+    fix_path_if_needed()
+
     # 创建Qt应用实例
     app = QApplication(sys.argv)
 

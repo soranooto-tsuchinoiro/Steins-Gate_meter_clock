@@ -11,6 +11,7 @@ from PIL import Image, ImageDraw
 from PyQt5.QtGui import QIcon, QImage, QPixmap
 from PyQt5.QtWidgets import QAction, QMenu, QSystemTrayIcon
 
+from autostart import disable, enable, is_enabled
 from constants import TRAY_ICON_SIZE, TRAY_TOOLTIP
 from settings_window import SettingsDialog
 
@@ -143,6 +144,10 @@ class TrayIconManager:
         pre_announce_action = self._create_pre_announce_action()
         tray_menu.addAction(pre_announce_action)
 
+        # 开机自启选项（可勾选）
+        autostart_action = self._create_autostart_action()
+        tray_menu.addAction(autostart_action)
+
         tray_menu.addSeparator()
 
         # 设置参数菜单项
@@ -182,6 +187,26 @@ class TrayIconManager:
 
         pre_announce_action.triggered.connect(_toggle_pre_announce)
         return pre_announce_action
+
+    def _create_autostart_action(self):
+        """创建"开机自启"菜单项
+
+        Returns:
+            QAction: 菜单项对象
+        """
+        autostart_action = QAction("开机自启", self.parent)
+        autostart_action.setCheckable(True)
+        autostart_action.setChecked(is_enabled())
+
+        def _toggle_autostart(checked):
+            """切换开机自启设置"""
+            if checked:
+                enable()
+            else:
+                disable()
+
+        autostart_action.triggered.connect(_toggle_autostart)
+        return autostart_action
 
     # ========================================================================
     # 私有方法 - 菜单动作处理
